@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" href="#">
+  <title>Random Image Selection from a Folder</title>
+  <link rel='stylesheet' type='text/css' media='screen' href="selectionner.css">
+</head>
+<body>
+  <h1>Image Selection from a Folder</h1>
+  <form>
+    <input type="file" id="file-input" webkitdirectory directory multiple />
+    <input type="number" id="count-input" placeholder="Number of images to select" />
+    <input type="button" id="submit-btn" value="Select Images" onclick="loadImages()" />
+  </form>
+  <div id="preview"></div>
+  <script>
+    window.selectedImages = [];
+
+    // Function to create object URLs from selected files
+    function createObjectURLs(files) {
+      let objectURLs = [];
+      for (let i = 0; i < files.length; i++) {
+        const objectURL = URL.createObjectURL(files[i]);
+        objectURLs.push(objectURL);
+      }
+      return objectURLs;
+    }
+
+    // Function to load selected images
+    function loadImages() {
+      // Get the files from the selected folder
+      const files = document.getElementById("file-input").files;
+      
+      // Check if any files have been selected
+      if (files.length === 0) {
+        alert("Please select a folder containing images.");
+        return;
+      }
+
+      // Get the number of images to select
+      const count = parseInt(document.getElementById("count-input").value);
+
+      // Check if the number is valid
+      if (isNaN(count) || count <= 0 || count > files.length) {
+        alert("Please enter a valid number of images to select.");
+        return;
+      }
+
+      // Select images randomly
+      const selectedFiles = [];
+      while (selectedFiles.length < count) {
+        const index = Math.floor(Math.random() * files.length);
+        const file = files[index];
+        if (!selectedFiles.includes(file)) {
+          selectedFiles.push(file);
+        }
+      }
+
+      // Create object URLs and images for each selected image
+      const objectURLs = createObjectURLs(selectedFiles);
+      const images = selectedFiles.map((file, index) => {
+        return {
+          name: file.name,
+          url: objectURLs[index],
+          image: new Image()
+        };
+      });
+
+      // Load the images
+      let loadedImages = 0;
+      images.forEach((image, index) => {
+        image.image.onload = () => {
+          loadedImages++;
+          if (loadedImages === images.length) {
+            // All images have been loaded
+            window.selectedImages = images;
+            // Save the data to local storage
+            sessionStorage.setItem("selectedImages", JSON.stringify(window.selectedImages));
+            window.location.href = "nouveau.html";
+          }
+        };
+        image.image.src = image.url;
+      });
+    }
+
+    // Listen to file input changes
+    const fileInput = document.getElementById("file-input");
+    fileInput.addEventListener("change", () => {
+      if (fileInput.files.length > 0) {
+        const selectedDirectory = fileInput.files[0].webkitRelativePath.split('/')[0];
+        localStorage.setItem("selectedDirectory", selectedDirectory);
+        console.log(selectedDirectory); // Display the selected directory name in the console
+      }
+    });
+
+  </script>
+</body>
+</html>

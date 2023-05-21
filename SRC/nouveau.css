@@ -1,0 +1,57 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+}
+
+#images {
+  flex: 0 0 35%; /* Modifiez "flex" pour définir explicitement 30% de la largeur */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-gap: 10px;
+  align-content: flex-start;
+  min-height: 0;
+  overflow: auto;
+  padding: 1px;
+  background-color: rgba(255, 255, 255, 0.5);
+  box-sizing: border-box;
+}
+
+.image {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  height: 150px;
+  margin: 5px;
+  cursor: pointer;
+  z-index: 3;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.dragged-image {
+  position: absolute;
+  z-index: 4;
+}
+
+#block2 {
+
+  position: relative;
+  flex: 0 0 66%; 
+  min-height: 100%;
+  width: 65%;
+  background-color: rgb(231, 221, 221);
+  /*position: fixed;*/
+  top: 0;
+  right: 0;
+  
+}
+
+.image.over {
+  z-index: 2;
+}
+
+.image.selected {
+  opacity: 0.5;
+  cursor: move;
+}

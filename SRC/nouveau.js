@@ -40,6 +40,18 @@ function removeBackground(image, callback) {
   transparentImage.src = transparentImageURL;
 }
 
+
+
+function getImagePosition(image) {
+  // Récupérer les valeurs de `left` et `top` de l'image
+  var left = image.style.left;
+  var top = image.style.top;
+
+  // Afficher les coordonnées de position de l'image
+  console.log("Position de l'image : left =", left, ", top =", top);
+}
+
+
 function dragImages() {
   let imagePositions = {};
   let lastSauvegarde = {};
@@ -107,6 +119,7 @@ function dragImages() {
         mouseX = event.pageX;
         mouseY = event.pageY;
       }
+      getImagePosition(this);
     });
   });
 }
@@ -225,7 +238,6 @@ addImageButton.addEventListener('click', function() {
   addNewImage();
 });
 
-//Ajouter une nouvelle Image
 function addNewImage() {
   // Créez un nouvel élément <input> de type "file"
   const fileInput = document.createElement('input');
@@ -240,17 +252,20 @@ function addNewImage() {
     if (selectedFile) {
       // Créez un nouvel élément <img> pour afficher l'image
       const img = document.createElement('img');
+      img.onload = function() {
+        // Une fois l'image chargée, appeler removeBackground()
+        removeBackground(img, function(transparentImage) {
+          // Supprimer le fond de l'élément "block2" avant d'ajouter l'image
+          d3.select("#block2").style("background-image", "none");
+
+          // Ajoutez l'image à la page
+          document.getElementById('images').appendChild(transparentImage);
+
+          // Initialiser la fonction de glisser-déposer une fois que l'image a été ajoutée à la page
+          dragImages();
+        });
+      };
       img.src = URL.createObjectURL(selectedFile); // Chargez l'image à partir du fichier
-      img.classList.add('image');
-
-      // Ajoutez l'image à la page
-      document.getElementById('images').appendChild(img);
-
-      // Ajoutez l'image à la matrice
-      imageMatrix.push(selectedFile.name);
-
-      // Initialiser la fonction de glisser-déposer une fois que l'image a été ajoutée à la page
-      dragImages();
     }
   });
 

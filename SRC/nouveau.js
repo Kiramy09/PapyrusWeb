@@ -1,3 +1,9 @@
+let imagePositions = {};
+const selectedImages = JSON.parse(sessionStorage.getItem("selectedImages"));
+const selectedDirectory = localStorage.getItem("selectedDirectory");
+console.clear();
+/********************************************************SUPPRESSION DES ARRIÈRES PLAN DES IMAGES ********************************************************** */
+
 function removeBackground(image, callback) {
   // Créer un élément canvas
   var canvas = document.createElement("canvas");
@@ -34,28 +40,24 @@ function removeBackground(image, callback) {
   var transparentImage = new Image();
   transparentImage.onload = function() {
     transparentImage.classList.add('image'); // Ajouter la classe "image"
+    transparentImage.setAttribute("data-name", image.getAttribute("data-name")); // Copier l'attribut data-name de l'image d'origine
     transparentImage.setAttribute("style", "background-color: transparent;"); // Définir le fond transparent
     callback(transparentImage);
   };
   transparentImage.src = transparentImageURL;
+  
+  
 }
 
 
 
-function getImagePosition(image) {
-  // Récupérer les valeurs de `left` et `top` de l'image
-  var left = image.style.left;
-  var top = image.style.top;
+/**************************************************************FONCTION GLISSER DÉPOSER********************************************************************** */
 
-  // Afficher les coordonnées de position de l'image
-  console.log("Position de l'image : left =", left, ", top =", top);
-}
 
 
 function dragImages() {
-  let imagePositions = {};
-  let lastSauvegarde = {};
   let selectedImage = null;
+  let lastSauvegarde;
   let mouseX = 0;
   let mouseY = 0;
   let imageWidth = 150;
@@ -69,10 +71,19 @@ function dragImages() {
       d3.select(selectedImage)
         .style("cursor", "move")
         .classed("dragged-image", true); // Ajouter la classe "dragged-image"
+
+      // Vérifiez si l'image est à l'intérieur de block2
+      if (selectedImage.parentNode.id === "block2") {
+        // Ajoutez les coordonnées de position relatives de la div #block2 au déplacement
+        const block2Rect = document.getElementById("block2").getBoundingClientRect();
+        mouseX -= block2Rect.left;
+        mouseY -= block2Rect.top;
+      }
     }
   });
 
   d3.select(document).on("mousemove", function(event) {
+
     if (selectedImage) {
       let dx = event.pageX - mouseX;
       let dy = event.pageY - mouseY;
@@ -85,22 +96,31 @@ function dragImages() {
         const block2Rect = document.getElementById("block2").getBoundingClientRect();
         dx -= block2Rect.left;
         dy -= block2Rect.top;
+
+
       }
 
       selectedImage.style.left = left + dx + "px";
       selectedImage.style.top = top + dy + "px";
       mouseX = event.pageX;
       mouseY = event.pageY;
-      let imageName = selectedImage.src.split('/').pop();
+      
+      const imageName = selectedImage.getAttribute('data-name');
+
+      console.log(selectedImage)
+      console.log(imageName)
+      
       imagePositions[imageName] = {
         left: selectedImage.style.left,
         top: selectedImage.style.top
       };
     }
+    console.log(imagePositions)
   });
 
   d3.select(document).on("mouseup", function(event) {
     selectedImage = null;
+    savePositions(); 
     //d3.selectAll(".dragged-image").classed("dragged-image", false); // Supprimer la classe "dragged-image"
   });
 
@@ -119,22 +139,143 @@ function dragImages() {
         mouseX = event.pageX;
         mouseY = event.pageY;
       }
-      getImagePosition(this);
+    
     });
   });
+}
+
+/************************************************************FONCTION SAVE AS*********************************************************** */
+
+function saveImagePositions() {
+  // Ajoutez le nom du dossier sélectionné à l'objet imagePositions
+  imagePositions["selectedDirectory"] = selectedDirectory;
+
+  // Convertir l'objet imagePositions en chaîne JSON
+  const imagePositionsJSON = JSON.stringify(imagePositions);
+
+  // Demander à l'utilisateur d'entrer un nom pour la sauvegarde
+  const saveName = window.prompt("Entrez un nom pour votre sauvegarde :");
+
+  // Vérifier que l'utilisateur a entré un nom
+  if (saveName !== null) {
+    // Créer un nouveau blob avec les données JSON
+    const blob = new Blob([imagePositionsJSON], { type: "application/json;charset=utf-8" });
+
+    // Créer un nouvel élément <a> pour le téléchargement du fichier
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = saveName + '.json';
+    link.setAttribute('directory', './JSON/'); // Chemin relatif vers le dossier de sauvegarde
+
+    // Ajouter l'élément <a> à la page et déclencher le téléchargement du fichier
+    document.body.appendChild(link);
+    link.click();
+
+    // Supprimer l'élément <a> de la page
+    document.body.removeChild(link);
+  }
+}
+
+
+/**************************************************************SAVE****************************************************************** */
+
+function savePositions() {
+  const images = document.getElementsByClassName('image');
+
+  for (let i = 0; i < images.length; i++) {
+    const image = images[i];
+    const imageName = image.dataset.name;
+
+    const imageRect = image.getBoundingClientRect();
+    const leftI = imageRect.left + 'px';
+    const topI = imageRect.top + 'px';
+
+    // Mettre à jour les coordonnées dans imagePositions
+    imagePositions[imageName] = {
+      left: leftI,
+      top: topI
+    };
+  }
 }
 
 
 
 
+/*********************************************************************AJOUTER UNE IMAGE*********************************************** */
 
 
+function addNewImage() {
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+
+  fileInput.addEventListener('change', function() {
+    const selectedFile = fileInput.files[0];
+
+    if (selectedFile) {
+      const img = document.createElement('img');
+      const div = document.createElement('div'); // Nouveau div pour l'image
+      div.classList.add('image-container');
+      img.onload = function() {
+        removeBackground(img, function(transparentImage) {
+          div.appendChild(transparentImage); // Ajouter l'image avec fond transparent au div
+
+          const imageName = selectedFile.name; // Utiliser le nom du fichier comme nom de l'image
+
+          // Créer un élément de texte pour le nom de l'image
+          const imageNameSpan = document.createElement('span');
+          imageNameSpan.innerText = imageName; // Ajouter le nom de l'image dans le texte
+
+          // Ajouter le nom de l'image à la div
+          div.appendChild(imageNameSpan);
+
+          document.getElementById('images').appendChild(div); // Ajouter le div contenant l'image à la page
+          dragImages();
+
+          var imageRect = transparentImage.getBoundingClientRect();
+          var leftI = imageRect.left + 'px';
+          var topI = imageRect.top + 'px';
+
+          imagePositions[imageName] = {
+            left: leftI,
+            top: topI
+          };
+        });
+      };
+
+      img.src = URL.createObjectURL(selectedFile);
+      img.classList.add('image');
+    }
+  });
+
+  fileInput.click();
+}
+
+
+
+/********************************************************FONCTION DE CAPTURE************************************************************* */
+
+function captureImage()  {
+  // Sélectionnez le div à capturer (block2)
+  const elementToCapture = document.getElementById("block2");
+
+  // Utilisez html2canvas pour capturer le contenu du div
+  html2canvas(elementToCapture).then(function(canvas) {
+    // Créez un élément <a> pour télécharger l'image
+    const link = document.createElement('a');
+    link.download = 'ma_capture.png';
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  });
+}
+
+
+//DOC CHARGÉ
 
 document.addEventListener("DOMContentLoaded", function() {
 
+  //RÉCUPÉRATION ET AJOUT DES IMAGES SUR LA PAGE 
 
-  const selectedImages = JSON.parse(sessionStorage.getItem("selectedImages"));
-  const selectedDirectory = localStorage.getItem("selectedDirectory");
+
   console.log(selectedDirectory);// Affiche le nom du dossier dans la console
   let imageMatrix;
   if (!selectedImages || selectedImages.length === 0) {
@@ -143,136 +284,106 @@ document.addEventListener("DOMContentLoaded", function() {
   } else {
     imageMatrix = selectedImages.map(image => image.name);
     console.log(imageMatrix);
+
   }
 
-  // Parcourir la matrice et ajouter chaque image à la page
-  for (let i = 0; i < imageMatrix.length; i++) {
-    const filename = imageMatrix[i];
-    const img = document.createElement('img');
-    img.onload = function() {
-      // Une fois l'image chargée, appeler removeBackground()
-      removeBackground(img, function(transparentImage) {
-        // Ajouter l'image avec fond transparent à la page
-        document.getElementById('images').appendChild(transparentImage);
+// Parcourir la matrice et ajouter chaque image à la page
+for (let i = 0; i < imageMatrix.length; i++) {
 
-        // Initialiser la fonction de glisser-déposer une fois que l'image a été ajoutée à la page
-        dragImages();
-      });
+  const name = imageMatrix[i]
+  console.log(name)
 
-    };
-    img.src = `${selectedDirectory}/${filename}`; // Chemin de l'image
-    img.classList.add('image');
-  }
-
+  const filename = imageMatrix[i];
+  const img = document.createElement('img');
+  img.setAttribute('data-name', name);
+  console.log(img)
   
-    function captureImage2() {
+  img.onload = function() {
+    // Une fois l'image chargée, appeler removeBackground()
+    removeBackground(img, function(transparentImage) {
+      // Créer une div pour l'image
+      const imageDiv = document.createElement('div');
+      imageDiv.classList.add('image-container'); // Ajouter une classe CSS pour le style de la div si nécessaire
 
-        // Sélectionne le div à capturer
-        const elementToCapture = document.querySelector("#block2");
+      // Ajouter l'image avec fond transparent à la div
+      imageDiv.appendChild(transparentImage);
 
-        // Utilise html2canvas pour capturer le contenu du div
-        html2canvas(elementToCapture).then(function(canvas) {
+      // Créer un élément de texte pour le nom de l'image
+      const imageNameSpan = document.createElement('span');
+      imageNameSpan.innerText = filename; // Ajouter le nom de l'image dans le texte
 
-          // Crée un élément <a> pour télécharger l'image
-          const link = document.createElement('a');
-          link.download = 'ma_capture.png';
-          link.href = canvas.toDataURL("image/png");
-          link.click();
-          
-        });
-    }
+      // Ajouter le nom de l'image à la div
+      imageDiv.appendChild(imageNameSpan);
 
-    function savePositions() {
+      // Ajouter la div à la page
+      document.getElementById('images').appendChild(imageDiv);
 
-      // Boucle à travers chaque image et stocke sa position actuelle
-      d3.selectAll('.image').each(function(d) {
-        let imageName = this.src.split('/').pop(); // Récupère le nom de l'image
-        let left = this.style.left;
-        let top = this.style.top;
-        lastSauvegarde[imageName] = {
-          left: left,
-          top: top
-        };
-      });
-    }
-      const buttonSave = document.getElementById('save');
-      const captureButton=document.getElementById('capture');
+      // Initialiser la fonction de glisser-déposer une fois que l'image a été ajoutée à la page
+      dragImages();
 
+      const imageName = imageMatrix[i];
 
-      buttonSave.addEventListener('click', () => {
-        savePositions();
-      });
+      var imageRect = transparentImage.getBoundingClientRect();
 
-      captureButton.addEventListener('click', () => {
+      // Récupérer les valeurs de `left` et `top` à partir de l'objet de rectangle
+      var leftI = imageRect.left + 'px';
+      var topI = imageRect.top + 'px';
 
-        console.log("capture effectué")
-        captureImage2();
-      });
-
-  // Sélectionnez le bouton "Sauvegarder cette page"
-const savePageButton = document.getElementById('savePage');
-
-// Ajoutez un écouteur d'événements "click" au bouton
-savePageButton.addEventListener('click', function() {
-  // Demandez à l'utilisateur d'entrer un nom pour la sauvegarde
-  const saveName = window.prompt('Entrez un nom pour votre sauvegarde :');
-
-  // Vérifiez que l'utilisateur a entré un nom
-  if (saveName !== null) {
-    // Sauvegardez la position de chaque image dans un objet JSON
-    const imagePositionsJSON = JSON.stringify(imagePositions);
-
-    // Enregistrez la sauvegarde dans localStorage sous la clé "saveName"
-    localStorage.setItem(saveName, imagePositionsJSON);
-    console.log(imagePositionsJSON)
-  }
-});
-
-//Ajouter une nouvelle image:  
-// Récupère l'élément de bouton "Ajouter une image"
-const addImageButton = document.getElementById('add-image');
-
-// Ajoute un écouteur d'événement pour le clic sur le bouton "Ajouter une image"
-addImageButton.addEventListener('click', function() {
-  // Appelle la fonction pour ajouter une nouvelle image à la matrice
-  addNewImage();
-});
-
-function addNewImage() {
-  // Créez un nouvel élément <input> de type "file"
-  const fileInput = document.createElement('input');
-  fileInput.type = 'file';
-
-  // Ajoutez un écouteur d'événement pour le changement de fichier
-  fileInput.addEventListener('change', function() {
-    // Récupère le fichier sélectionné par l'utilisateur
-    const selectedFile = fileInput.files[0];
-
-    // Vérifiez que l'utilisateur a sélectionné un fichier
-    if (selectedFile) {
-      // Créez un nouvel élément <img> pour afficher l'image
-      const img = document.createElement('img');
-      img.onload = function() {
-        // Une fois l'image chargée, appeler removeBackground()
-        removeBackground(img, function(transparentImage) {
-          // Supprimer le fond de l'élément "block2" avant d'ajouter l'image
-          d3.select("#block2").style("background-image", "none");
-
-          // Ajoutez l'image à la page
-          document.getElementById('images').appendChild(transparentImage);
-
-          // Initialiser la fonction de glisser-déposer une fois que l'image a été ajoutée à la page
-          dragImages();
-        });
+      // Mettre à jour la variable imagePositions avec le nom et les positions de l'image
+      imagePositions[imageName] = {
+        left: leftI,
+        top: topI
       };
-      img.src = URL.createObjectURL(selectedFile); // Chargez l'image à partir du fichier
-    }
-  });
-
-  // Déclenchez le clic sur l'élément <input> pour permettre à l'utilisateur de sélectionner un fichier
-  fileInput.click();
+    });
+  };
+  img.src = `${selectedDirectory}/${filename}`; // Chemin de l'image
+  img.classList.add('image');
 }
 
+
+  
+console.log(imagePositions);
+
+
+//Récupération des bouttons
+
+const buttonSave = document.getElementById('save');
+const captureButton=document.getElementById('capture');
+const addImageButton = document.getElementById('add-image');
+const saveAsButton = document.getElementById("saveAs");
+
+
+//Appel des fonctions sur les boutons
+//Enregistrer
+buttonSave.addEventListener('click', () => {
+
+  savePositions();
+
+});
+//capturer
+captureButton.addEventListener('click', () => {
+
+        console.log("capture effectué")
+        captureImage();
+
+});
+
+//ajouter une image
+addImageButton.addEventListener('click', function() {
+
+  addNewImage();
+
+});
+//Enregistrement d'un nouveau fichier
+
+saveAsButton.addEventListener("click",function(){
+  console.log(imagePositions)
+  savePositions();
+  console.log(imagePositions)
+  saveImagePositions();
+
+
+});
 
   console.log(imageMatrix);
 

@@ -67,10 +67,13 @@ function removeBackground(image, callback) {
   var transparentImage = new Image();
   transparentImage.onload = function() {
     transparentImage.classList.add('image'); // Ajouter la classe "image"
+    transparentImage.setAttribute("data-name", image.getAttribute("data-name")); // Copier l'attribut data-name de l'image d'origine
     transparentImage.setAttribute("style", "background-color: transparent;"); // Définir le fond transparent
     callback(transparentImage);
   };
   transparentImage.src = transparentImageURL;
+  
+  
 }
 
 
@@ -105,33 +108,40 @@ function dragImages() {
   });
 
   d3.select(document).on("mousemove", function(event) {
-    if (selectedImage) {
-      let dx = event.pageX - mouseX;
-      let dy = event.pageY - mouseY;
-      let left = parseInt(selectedImage.style.left || "0");
-      let top = parseInt(selectedImage.style.top || "0");
 
-      // Vérifiez si l'image est déplacée sur la div #block2
-      if (selectedImage.parentNode.id === "block2") {
-        // Ajoutez les coordonnées de position relatives de la div #block2 au déplacement
-        const block2Rect = document.getElementById("block2").getBoundingClientRect();
-        dx -= block2Rect.left;
-        dy -= block2Rect.top;
+if (selectedImage) {
+  let dx = event.pageX - mouseX;
+  let dy = event.pageY - mouseY;
+  let left = parseInt(selectedImage.style.left || "0");
+  let top = parseInt(selectedImage.style.top || "0");
+
+  // Vérifiez si l'image est déplacée sur la div #block2
+  if (selectedImage.parentNode.id === "block2") {
+    // Ajoutez les coordonnées de position relatives de la div #block2 au déplacement
+    const block2Rect = document.getElementById("block2").getBoundingClientRect();
+    dx -= block2Rect.left;
+    dy -= block2Rect.top;
 
 
-      }
+  }
 
-      selectedImage.style.left = left + dx + "px";
-      selectedImage.style.top = top + dy + "px";
-      mouseX = event.pageX;
-      mouseY = event.pageY;
-      let imageName = selectedImage.src.split('/').pop();
-      imagePositions[imageName] = {
-        left: selectedImage.style.left,
-        top: selectedImage.style.top
-      };
-    }
-  });
+  selectedImage.style.left = left + dx + "px";
+  selectedImage.style.top = top + dy + "px";
+  mouseX = event.pageX;
+  mouseY = event.pageY;
+  
+  const imageName = selectedImage.getAttribute('data-name');
+
+  console.log(selectedImage)
+  console.log(imageName)
+  
+  imagePositions[imageName] = {
+    left: selectedImage.style.left,
+    top: selectedImage.style.top
+  };
+}
+
+});
 
   d3.select(document).on("mouseup", function(event) {
     selectedImage = null;
@@ -267,6 +277,8 @@ function captureImage()  {
 let imagePositions = {};
 let imageMatrix = [];
 
+
+
 document.getElementById('fileInput').addEventListener('change', function(event) {
   const file = event.target.files[0]; // Récupérer le premier fichier sélectionné
 
@@ -294,6 +306,9 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
       const cles = Object.keys(data).filter(key => key !== 'selectedDirectory');
       console.log('Clés (noms des images) :', cles);
 
+      console.log(imagePositions)
+
+      
       // Parcourir les clés (noms des images) et ajouter chaque image à la page
       for (let i = 0; i < cles.length; i++) {
         const filename = cles[i];
@@ -303,6 +318,8 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
         // Vérifier si l'image existe dans le JSON
         if (imagePositions.hasOwnProperty(filename)) {
           const img = new Image();
+          img.setAttribute('data-name', filename);
+          console.log(img)
           img.onload = function() {
             // Une fois l'image chargée, appeler removeBackground()
             removeBackground(img, function(transparentImage) {

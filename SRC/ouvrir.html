@@ -28,7 +28,7 @@
 
 
 
-/********************************************************SUPPRESSION DES ARRIÈRES PLAN DES IMAGES ********************************************************** */
+/***********************************************SUPPRESSION DES ARRIÈRES PLAN DES IMAGES ******************************************/
 
 function removeBackground(image, callback) {
   // Créer un élément canvas
@@ -66,7 +66,7 @@ function removeBackground(image, callback) {
   var transparentImage = new Image();
   transparentImage.onload = function() {
     transparentImage.classList.add('image'); // Ajouter la classe "image"
-    transparentImage.setAttribute("data-name", image.getAttribute("data-name")); // Copier l'attribut data-name de l'image d'origine
+    transparentImage.setAttribute("data-name", image.getAttribute("data-name")); 
     transparentImage.setAttribute("style", "background-color: transparent;"); // Définir le fond transparent
     callback(transparentImage);
   };
@@ -77,7 +77,7 @@ function removeBackground(image, callback) {
 
 
 
-/**************************************************************FONCTION GLISSER DÉPOSER********************************************************************** */
+/*******************************************************FONCTION GLISSER DÉPOSER****************************************************/
 
 function dragImages() {
   let selectedImage = null;
@@ -161,8 +161,10 @@ function dragImages() {
 }
 
 /************************************************************FONCTION SAVE AS*********************************************************** */
+
 const selectedDirectory = localStorage.getItem("selectedDirectory");
 function saveImagePositions() {
+  
   // Ajoutez le nom du dossier sélectionné à l'objet imagePositions
   imagePositions["selectedDirectory"] = selectedDirectory;
 
@@ -181,7 +183,6 @@ function saveImagePositions() {
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = saveName + '.json';
-    link.setAttribute('directory', './JSON/'); // Chemin relatif vers le dossier de sauvegarde
 
     // Ajouter l'élément <a> à la page et déclencher le téléchargement du fichier
     document.body.appendChild(link);
@@ -207,7 +208,7 @@ function savePositions() {
     const leftI = imageRect.left + 'px';
     const topI = imageRect.top + 'px';
     // Vérifiez si l'image est dans block2
-    const isInBlock2 = image.parentNode.id === "block2";
+    const isInBlock2 = image.parentNode === document.getElementById("block2");
     // Mettre à jour les coordonnées dans imagePositions
     imagePositions[imageName] = {
       left: leftI,
@@ -252,7 +253,7 @@ function addNewImage() {
 
           document.getElementById('images').appendChild(div); // Ajouter le div contenant l'image à la page
           dragImages();
-
+          JPG
           var imageRect = transparentImage.getBoundingClientRect();
           var leftI = imageRect.left + 'px';
           var topI = imageRect.top + 'px';
@@ -368,7 +369,7 @@ if (selectedJSON) {
               // Ajouter la div à la page
               if(pos){
                 //document.body.appendChild(imageDiv);
-                console.log("oui")
+                console.log("image dans blok2")
                 document.getElementById('block2').appendChild(imageDiv);
 
               }

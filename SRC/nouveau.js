@@ -158,7 +158,6 @@ function saveImagePositions() {
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = saveName + '.json';
-    link.setAttribute('directory', './JSON/'); // Chemin relatif vers le dossier de sauvegarde
 
     // Ajouter l'élément <a> à la page et déclencher le téléchargement du fichier
     document.body.appendChild(link);

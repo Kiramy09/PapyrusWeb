@@ -86,7 +86,7 @@ function dragImages() {
 
       const imageName = selectedImage.getAttribute('data-name');
 
-      // Vérifiez si l'image est déplacée à l'intérieur de la div cible (block2)
+      // Vérifier si l'image est déplacée à l'intérieur de la div cible (block2)
       if (isInsideBlock2(selectedImage)) {
         const block2 = document.getElementById("block2");
         block2.appendChild(selectedImage);
@@ -140,14 +140,14 @@ function dragImages() {
 /************************************************************FONCTION SAVE AS*********************************************************** */
 
 function saveImagePositions() {
-  // Ajoutez le nom du dossier sélectionné à l'objet imagePositions
+  // Ajouter le nom du dossier sélectionné à l'objet imagePositions
   imagePositions["selectedDirectory"] = selectedDirectory;
 
   // Convertir l'objet imagePositions en chaîne JSON
   const imagePositionsJSON = JSON.stringify(imagePositions);
 
   // Demander à l'utilisateur d'entrer un nom pour la sauvegarde
-  const saveName = window.prompt("Entrez un nom pour votre sauvegarde :");
+  const saveName = window.prompt("Enter a name for your backup:");
 
   // Vérifier que l'utilisateur a entré un nom
   if (saveName !== null) {
@@ -182,7 +182,7 @@ function savePositions() {
     const imageRect = image.getBoundingClientRect();
     const leftI = imageRect.left + 'px';
     const topI = imageRect.top + 'px';
-    // Vérifiez si l'image est dans block2
+    // Vérifier si l'image est dans block2
     const isInBlock2 = image.parentNode.id === "block2";
     // Mettre à jour les coordonnées dans imagePositions
     imagePositions[imageName] = {
@@ -250,12 +250,12 @@ function addNewImage() {
 /********************************************************FONCTION DE CAPTURE************************************************************* */
 
 function captureImage()  {
-  // Sélectionnez le div à capturer (block2)
+  // Sélectionner le div à capturer (block2)
   const elementToCapture = document.getElementById("block2");
 
-  // Utilisez html2canvas pour capturer le contenu du div
+  // Utiliser html2canvas pour capturer le contenu du div
   html2canvas(elementToCapture).then(function(canvas) {
-    // Créez un élément <a> pour télécharger l'image
+    // Créer un élément <a> pour télécharger l'image
     const link = document.createElement('a');
     link.download = 'ma_capture.png';
     link.href = canvas.toDataURL("image/png");

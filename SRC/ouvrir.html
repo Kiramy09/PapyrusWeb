@@ -5,7 +5,7 @@
     <link rel="shortcut icon" href="#">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.1.2/caman.full.min.js"></script>
     <title>Matrice d'images</title>
-    <link rel='stylesheet' type='text/css' media='screen' href="mat.css">
+    <link rel='stylesheet' type='text/css' media='screen' href="ouvrir.css">
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.0/html2canvas.min.js"></script>
@@ -81,6 +81,7 @@ function removeBackground(image, callback) {
 /**************************************************************FONCTION GLISSER DÉPOSER********************************************************************** */
 
 function dragImages() {
+
   let selectedImage = null;
   let lastSauvegarde;
   let mouseX = 0;
@@ -117,6 +118,7 @@ if (selectedImage) {
 
   // Vérifiez si l'image est déplacée sur la div #block2
   if (selectedImage.parentNode.id === "block2") {
+    console.log("block2")
     // Ajoutez les coordonnées de position relatives de la div #block2 au déplacement
     const block2Rect = document.getElementById("block2").getBoundingClientRect();
     dx -= block2Rect.left;
@@ -168,7 +170,7 @@ if (selectedImage) {
   });
 }
 
-/************************************************************FONCTION SAVE AS*********************************************************** */
+/********************************************************************FONCTION SAVE AS********************************************************************** */
 
 function saveImagePositions() {
   // Ajoutez le nom du dossier sélectionné à l'objet imagePositions
@@ -206,7 +208,7 @@ function saveImagePositions() {
 
 
 
-/*********************************************************************AJOUTER UNE IMAGE*********************************************** */
+/*************************************************************************AJOUTER UNE IMAGE**************************************************************** */
 
 
 function addNewImage() {
@@ -257,7 +259,7 @@ function addNewImage() {
 
 
 
-/********************************************************FONCTION DE CAPTURE************************************************************* */
+/**************************************************************FONCTION DE CAPTURE************************************************************************* */
 
 function captureImage()  {
   // Sélectionnez le div à capturer (block2)
@@ -338,7 +340,8 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
               imageDiv.appendChild(imageNameSpan);
 
               // Ajouter la div à la page
-              document.getElementById('images').appendChild(imageDiv);
+              document.body.appendChild(imageDiv);
+
 
               // Initialiser la fonction de glisser-déposer une fois que l'image a été ajoutée à la page
               dragImages();
@@ -367,5 +370,19 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
 
         
     </script>
+      <script>
+        window.onload = function() {
+
+          const images = document.querySelectorAll('.image');
+    
+          images.forEach(function(image) {
+            if (image.parentNode.id === "block2") {
+              console.log("L'image est sur block2 :", image.getAttribute("data-name"));
+            } else if (image.parentNode.id === "images") {
+              console.log("L'image est sur images :", image.getAttribute("data-name"));
+            }
+          });
+        };
+      </script>
 </body>
 </html>

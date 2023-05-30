@@ -60,8 +60,7 @@ function dragImages() {
   let lastSauvegarde;
   let mouseX = 0;
   let mouseY = 0;
-  let imageWidth = 150;
-  let imageHeight = 150;
+
 
   d3.select(document).on("mousedown", function(event) {
     if (event.target.classList.contains("image")) {

@@ -54,13 +54,12 @@ function removeBackground(image, callback) {
 /**************************************************************FONCTION GLISSER DÉPOSER********************************************************************** */
 
 
-
 function dragImages() {
   let selectedImage = null;
-  let lastSauvegarde;
   let mouseX = 0;
   let mouseY = 0;
-
+  let imageWidth = 150;
+  let imageHeight = 150;
 
   d3.select(document).on("mousedown", function(event) {
     if (event.target.classList.contains("image")) {
@@ -69,58 +68,40 @@ function dragImages() {
       mouseY = event.pageY;
       d3.select(selectedImage)
         .style("cursor", "move")
-        .classed("dragged-image", true); // Ajouter la classe "dragged-image"
-
-      // Vérifiez si l'image est à l'intérieur de block2
-      if (selectedImage.parentNode.id === "block2") {
-        // Ajoutez les coordonnées de position relatives de la div #block2 au déplacement
-        const block2Rect = document.getElementById("block2").getBoundingClientRect();
-        mouseX -= block2Rect.left;
-        mouseY -= block2Rect.top;
-      }
+        .classed("dragged-image", true);
     }
   });
 
   d3.select(document).on("mousemove", function(event) {
-
     if (selectedImage) {
       let dx = event.pageX - mouseX;
       let dy = event.pageY - mouseY;
       let left = parseInt(selectedImage.style.left || "0");
       let top = parseInt(selectedImage.style.top || "0");
 
-      // Vérifiez si l'image est déplacée sur la div #block2
-      if (selectedImage.parentNode.id === "block2") {
-        // Ajoutez les coordonnées de position relatives de la div #block2 au déplacement
-        const block2Rect = document.getElementById("block2").getBoundingClientRect();
-        dx -= block2Rect.left;
-        dy -= block2Rect.top;
-
-
-      }
-
       selectedImage.style.left = left + dx + "px";
       selectedImage.style.top = top + dy + "px";
       mouseX = event.pageX;
       mouseY = event.pageY;
-      
+
       const imageName = selectedImage.getAttribute('data-name');
 
-      console.log(selectedImage)
-      console.log(imageName)
-      
+      // Vérifiez si l'image est déplacée à l'intérieur de la div cible (block2)
+      if (isInsideBlock2(selectedImage)) {
+        const block2 = document.getElementById("block2");
+        block2.appendChild(selectedImage);
+      }
+
       imagePositions[imageName] = {
         left: selectedImage.style.left,
         top: selectedImage.style.top
       };
     }
-    console.log(imagePositions)
   });
 
   d3.select(document).on("mouseup", function(event) {
     selectedImage = null;
-    savePositions(); 
-    //d3.selectAll(".dragged-image").classed("dragged-image", false); // Supprimer la classe "dragged-image"
+    savePositions();
   });
 
   let images = d3.selectAll('.image');
@@ -132,16 +113,29 @@ function dragImages() {
       d3.select(this)
         .style("opacity", null)
         .style("cursor", "move")
-        .classed("dragged-image", true); // Ajouter la classe "dragged-image"
+        .classed("dragged-image", true);
       selectedImage = this;
       if (event) {
         mouseX = event.pageX;
         mouseY = event.pageY;
       }
-    
     });
   });
+
+  function isInsideBlock2(image) {
+    const block2Rect = document.getElementById("block2").getBoundingClientRect();
+    const imageRect = image.getBoundingClientRect();
+
+    return (
+      imageRect.left >= block2Rect.left &&
+      imageRect.right <= block2Rect.right &&
+      imageRect.top >= block2Rect.top &&
+      imageRect.bottom <= block2Rect.bottom
+    );
+  }
 }
+
+
 
 /************************************************************FONCTION SAVE AS*********************************************************** */
 
@@ -176,6 +170,7 @@ function saveImagePositions() {
 }
 
 
+
 /**************************************************************SAVE****************************************************************** */
 
 function savePositions() {
@@ -188,11 +183,13 @@ function savePositions() {
     const imageRect = image.getBoundingClientRect();
     const leftI = imageRect.left + 'px';
     const topI = imageRect.top + 'px';
-
+    // Vérifiez si l'image est dans block2
+    const isInBlock2 = image.parentNode.id === "block2";
     // Mettre à jour les coordonnées dans imagePositions
     imagePositions[imageName] = {
       left: leftI,
-      top: topI
+      top: topI,
+      isInBlock2: isInBlock2
     };
   }
 }

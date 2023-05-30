@@ -23,7 +23,7 @@
     height: 150px;
     margin: 5px;
     cursor: pointer;
-    z-index: 2; /* Valeur modifiée */
+    z-index: 2;
   }
   .image-container {
     position: absolute;
@@ -34,7 +34,7 @@
   
   .dragged-image {
     position: absolute;
-    z-index: 2; /* Valeur modifiée */
+    z-index: 2;
     transform: translate(0, 0);
   }
   

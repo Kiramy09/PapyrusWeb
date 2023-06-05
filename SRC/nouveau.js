@@ -58,8 +58,6 @@ function dragImages() {
   let selectedImage = null;
   let mouseX = 0;
   let mouseY = 0;
-  let imageWidth = 150;
-  let imageHeight = 150;
 
   d3.select(document).on("mousedown", function(event) {
     if (event.target.classList.contains("image")) {
@@ -72,8 +70,23 @@ function dragImages() {
     }
   });
 
+  var imagesDeplacees = {};
   d3.select(document).on("mousemove", function(event) {
     if (selectedImage) {
+      if(!imagesDeplacees[selectedImage.src]) {
+      var element = selectedImage.parentElement;
+
+
+      element.style.border = "2px solid red";
+      // Créer une nouvelle image pour la copie non déplaçable
+      const nonDraggableImage = document.createElement('img');
+      nonDraggableImage.classList.add('non-draggable-image');
+      // Ajouter la copie non déplaçable de l'image à la div parente
+      element.appendChild(nonDraggableImage);
+      nonDraggableImage.src = selectedImage.src;
+      imagesDeplacees[selectedImage.src] = true;// Définir imageDeplacee à true pour indiquer que l'image a été déplacée
+  }
+
       let dx = event.pageX - mouseX;
       let dy = event.pageY - mouseY;
       let left = parseInt(selectedImage.style.left || "0");
@@ -92,9 +105,14 @@ function dragImages() {
         block2.appendChild(selectedImage);
       }
 
+      const imageRect = selectedImage.getBoundingClientRect();
+      const parentRect = selectedImage.parentNode.getBoundingClientRect();
+      const leftRelative = imageRect.left - parentRect.left;
+      const topRelative = imageRect.top - parentRect.top;
+
       imagePositions[imageName] = {
-        left: selectedImage.style.left,
-        top: selectedImage.style.top
+        left: leftRelative + "px",
+        top: topRelative + "px"
       };
     }
   });
@@ -134,6 +152,7 @@ function dragImages() {
     );
   }
 }
+
 
 
 
@@ -179,11 +198,13 @@ function savePositions() {
     const image = images[i];
     const imageName = image.dataset.name;
 
-    const imageRect = image.getBoundingClientRect();
-    const leftI = imageRect.left + 'px';
-    const topI = imageRect.top + 'px';
+    // Récupérer les positions par rapport à la div parente
+    const leftI = image.offsetLeft + 'px';
+    const topI = image.offsetTop + 'px';
+
     // Vérifier si l'image est dans block2
     const isInBlock2 = image.parentNode.id === "block2";
+
     // Mettre à jour les coordonnées dans imagePositions
     imagePositions[imageName] = {
       left: leftI,
@@ -192,6 +213,7 @@ function savePositions() {
     };
   }
 }
+
 
 
 

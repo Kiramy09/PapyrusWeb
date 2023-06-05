@@ -1,26 +1,32 @@
+/* Importez la police Skolar Latin depuis une source en ligne */
+@import url('https://fonts.googleapis.com/css?family=Skolar+Latin');
+
 body {
-	background-color: #d7ccc8; /* Marron clair */
+	background-color: #bfc0c0;
 }
 
 #header {
-	background-color: #795548; /* Marron */
+	background-color: #2e3142;
 	padding: 20px;
 	text-align: center;
-	color: #fff; /* Texte en blanc */
+  border-radius: 5px;
+  font-family: 'Skolar Latin', serif;	color: #fff;
 }
 
 #content {
 	background-color: #fff;
 	padding: 20px;
+  border-radius: 5px;
+  height: 300px;
 	margin-top: 20px;
 	border: 1px solid #ccc;
 }
 
 a {
-	text-decoration: none; /* supprime le soulignement des liens */
-	color: #795548; /* change la couleur des liens en marron */
-	background-color: #795548; /* Marron */
-	color: #fff; /* Texte en blanc */
+	text-decoration: none;
+	color: #795548;
+	background-color: #795548; 
+	color: #fff;
 	padding: 10px 20px;
 	border: none;
 	border-radius: 5px;
@@ -28,7 +34,7 @@ a {
 }
 
 a:hover {
-	background-color: #a1887f; /* Marron clair */
+	background-color: #2e3142;
 }
 
 #buttons {
@@ -37,7 +43,7 @@ a:hover {
     align-items: center;
 }
 .myButton, .myLink {
-    background-color: #795548;
+    background-color: #e86950;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -68,11 +74,13 @@ a:hover {
   }
   
 #footer {
-    background-color: #795548; /* Marron foncé */
-    color: #fff; /* Texte en blanc */
+	background-color: #2e3142;
+    color: #fff;
     padding: 10px;
     text-align: center;
     position: absolute;
+    border-radius: 5px;
+
     bottom: 0;
     width: 100%;
 }

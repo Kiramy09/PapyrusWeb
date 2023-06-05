@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <link rel="shortcut icon" href="#">
+  <link rel="shortcut icon" href="#">
   <title>Select a JSON File</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #e3d8d8;
+      background-color: #bfc0c0;
       padding: 20px;
       margin: 0;
     }
@@ -23,7 +24,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: #a69999;
+      background-color: #2e3142;
       padding: 20px;
       box-sizing: border-box;
     }
@@ -66,18 +67,18 @@
 <body>
   <div class="container">
     <div class="content">
-      <h1>Sélectionnez une sauvegarde</h1>
+      <h1>Select a Backup</h1>
       <form id="fileForm">
-        <label for="fileInput">Fichier JSON :</label>
+        <label for="fileInput">JSON File:</label>
         <input type="file" id="fileInput" accept=".json">
-        <input type="submit" value="Envoyer">
+        <input type="submit" value="Submit">
       </form>
     </div>
   </div>
 
   <script>
     document.getElementById('fileForm').addEventListener('submit', function(event) {
-      event.preventDefault(); // Empêche le formulaire de se soumettre
+      event.preventDefault(); // Prevents the form from submitting
 
       var file = document.getElementById('fileInput').files[0];
       var reader = new FileReader();
@@ -85,7 +86,7 @@
       reader.onload = function(event) {
         var jsonContent = event.target.result;
         localStorage.setItem('selectedJSON', jsonContent);
-        window.location.href = 'ouvrir.html'; // Remplacez "ouvrir.html" par l'URL de la page de destination
+        window.location.href = 'open.html'; // Replace "open.html" with the URL of the destination page
       };
 
       reader.readAsText(file);

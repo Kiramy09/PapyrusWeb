@@ -9,7 +9,7 @@
     display: grid;
     grid-template-columns: 1fr; /* Une seule colonne */
     grid-auto-rows: minmax(0, 1fr);
-    grid-gap: 5px; /* Espacement entre les éléments */
+    grid-gap: 250px; /* Espacement entre les éléments */
     overflow: auto; /* Barre de défilement en cas de dépassement */
     grid-auto-flow: dense; /* Ajout de cette ligne pour permettre un placement optimal des éléments */
     background-color:#bfc0c0;
@@ -17,6 +17,7 @@
     justify-content: left;
     align-items: center;
     align-content: start;
+    padding: 90px;
     
 }
 

@@ -160,38 +160,38 @@
 
 
 
-
+  const selectedDirectory = localStorage.getItem("selectedDirectory");
 
   /************************************************************FONCTION SAVE AS*********************************************************** */
 
   function saveImagePositions() {
-    // Ajouter le nom du dossier sélectionné à l'objet imagePositions
-    imagePositions["selectedDirectory"] = selectedDirectory;
+  // Ajouter le nom du dossier sélectionné à l'objet imagePositions
+  imagePositions["selectedDirectory"] = selectedDirectory;
 
-    // Convertir l'objet imagePositions en chaîne JSON
-    const imagePositionsJSON = JSON.stringify(imagePositions);
+  // Convertir l'objet imagePositions en chaîne JSON
+  const imagePositionsJSON = JSON.stringify(imagePositions);
 
-    // Demander à l'utilisateur d'entrer un nom pour la sauvegarde
-    const saveName = window.prompt("Enter a name for your backup:");
+  // Demander à l'utilisateur d'entrer un nom pour la sauvegarde
+  const saveName = window.prompt("Enter a name for your backup:");
+  console.log(saveName)
+  // Vérifier que l'utilisateur a entré un nom
+  if (saveName !== null) {
+    // Créer un nouveau blob avec les données JSON
+    const blob = new Blob([imagePositionsJSON], { type: "application/json;charset=utf-8" });
 
-    // Vérifier que l'utilisateur a entré un nom
-    if (saveName !== null) {
-      // Créer un nouveau blob avec les données JSON
-      const blob = new Blob([imagePositionsJSON], { type: "application/json;charset=utf-8" });
+    // Créer un nouvel élément <a> pour le téléchargement du fichier
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = saveName + '.json';
 
-      // Créer un nouvel élément <a> pour le téléchargement du fichier
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = saveName + '.json';
+    // Ajouter l'élément <a> à la page et déclencher le téléchargement du fichier
+    document.body.appendChild(link);
+    link.click();
 
-      // Ajouter l'élément <a> à la page et déclencher le téléchargement du fichier
-      document.body.appendChild(link);
-      link.click();
-
-      // Supprimer l'élément <a> de la page
-      document.body.removeChild(link);
-    }
+    // Supprimer l'élément <a> de la page
+    document.body.removeChild(link);
   }
+}
 
 
 
@@ -276,6 +276,36 @@
   }
 
 
+  /********************************************************Enregistrer******************************************************************/
+
+  function enregistrer(){
+
+    // Ajouter le nom du dossier sélectionné à l'objet imagePositions
+    imagePositions["selectedDirectory"] = selectedDirectory;
+
+    // Convertir l'objet imagePositions en chaîne JSON
+    const imagePositionsJSON = JSON.stringify(imagePositions);
+
+      // Demander à l'utilisateur d'entrer un nom pour la sauvegarde
+
+      var selectedFileName = localStorage.getItem('selectedFileName');
+  
+      console.log('Selected file:', selectedFileName);
+
+      const saveName = selectedFileName;
+
+      // Vérifier que l'utilisateur a entré un nom
+      if (saveName !== null) {
+        // Créer un nouvel objet Blob avec les données JSON
+        const blob = new Blob([imagePositionsJSON], { type: "application/json;charset=utf-8" });
+
+        // Écraser le fichier JSON existant en utilisant la fonction saveAs()
+        saveAs(blob, saveName);
+  }
+    
+  }
+
+
 
   /**************************************************************FONCTION DE CAPTURE************************************************************************* */
 
@@ -321,6 +351,7 @@
         console.log('Clés (noms des images) :', cles);
 
         console.log(imagePositions)
+
 
         
         // Parcourir les clés (noms des images) et ajouter chaque image à la page
@@ -402,7 +433,7 @@
       //Enregistrer
       buttonSave.addEventListener('click', () => {
 
-        savePositions();
+        enregistrer();
 
       });
       //capturer

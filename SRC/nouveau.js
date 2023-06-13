@@ -167,7 +167,7 @@ function saveImagePositions() {
 
   // Demander à l'utilisateur d'entrer un nom pour la sauvegarde
   const saveName = window.prompt("Enter a name for your backup:");
-
+  console.log(saveName)
   // Vérifier que l'utilisateur a entré un nom
   if (saveName !== null) {
     // Créer un nouveau blob avec les données JSON
@@ -374,7 +374,7 @@ const saveAsButton = document.getElementById("saveAs");
 //Enregistrer
 buttonSave.addEventListener('click', () => {
 
-  savePositions();
+  saveAsButton();
 
 });
 //capturer

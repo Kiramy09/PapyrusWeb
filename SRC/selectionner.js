@@ -33,7 +33,7 @@ function loadImages() {
   while (selectedFiles.length < count) {
     const index = Math.floor(Math.random() * files.length);
     const file = files[index];
-    if (!selectedFiles.includes(file)) {
+    if (!selectedFiles.includes(file) && file.type.startsWith("image/")) {
       selectedFiles.push(file);
     }
   }

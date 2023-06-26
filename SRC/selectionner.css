@@ -1,12 +1,24 @@
+@font-face {
+  font-family: 'Lora';
+  src: url('Polices/Lora/Lora-VariableFont_wght.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('Polices/Roboto/Roboto-Light.ttf') format('truetype');
+}
+
+
 body {
-    font-family: sans-serif;
+    font-family: 'Lora', serif;
     background-color: #bfc0c0;
+    
   }
 
   h1 {
     text-align: center;
     color: #fff;
     background-color: #2e3142;
+    border-radius: 5px;
   }
 
   #file-input, #count-input, #submit-btn {

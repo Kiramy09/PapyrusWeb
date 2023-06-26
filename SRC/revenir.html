@@ -3,11 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <link rel="shortcut icon" href="#">
-  <link rel="shortcut icon" href="#">
   <title>Select a JSON File</title>
   <style>
+
+    @font-face {
+      font-family: 'Lora';
+      src: url('Polices/Lora/Lora-VariableFont_wght.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'Roboto';
+      src: url('Polices/Roboto/Roboto-Light.ttf') format('truetype');
+    }
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Lora', serif;
       background-color: #bfc0c0;
       padding: 20px;
       margin: 0;
@@ -86,11 +95,13 @@
       reader.onload = function(event) {
         var jsonContent = event.target.result;
         localStorage.setItem('selectedJSON', jsonContent);
-        window.location.href = 'ouvrir.html'; // Replace "open.html" with the URL of the destination page
+        localStorage.setItem('selectedFileName', file.name);
+        window.location.href = 'ouvrir.html';
       };
 
       reader.readAsText(file);
     });
+
   </script>
 </body>
 </html>

@@ -1,0 +1,99 @@
+
+@font-face {
+  font-family: 'Lora';
+  src: url('Polices/Lora/Lora-VariableFont_wght.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('Polices/Roboto/Roboto-Light.ttf') format('truetype');
+}
+
+
+body {
+	background-color: #bfc0c0; /* GRIS */
+
+  font-family: 'Roboto', serif;
+}
+
+#header {
+	background-color: #2e3142; /* Bleu */
+	padding: 20px;
+	text-align: center;
+  border-radius: 5px;
+  font-family: 'Lora', serif; color: #fff;
+}
+
+#content {
+	background-color: #fff;
+	padding: 20px;
+  border-radius: 5px;
+  height: 300px;
+	margin-top: 20px;
+	border: 1px solid #ccc;
+}
+
+a {
+	text-decoration: none; /* supprime le soulignement des liens */
+	color: #795548; /* change la couleur des liens en marron */
+	background-color: #795548; /* Marron */
+	color: #fff; /* Texte en blanc */
+	padding: 10px 20px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+a:hover {
+	background-color: #2e3142; /* bleu */
+}
+
+#buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.myButton, .myLink {
+    background-color: #e86950;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    width: 500px; 
+    text-align: center;
+  }
+  
+  .myLink {
+    color: #fff;
+    text-decoration: none;
+    margin-bottom: 20px;
+    font-size: 16px;
+    display: inline-block;
+    width: 500px;
+    text-align: center;
+  }
+  #saved-pages {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+  }
+  
+  #saved-pages option {
+    font-size: 16px;
+  }
+  
+#footer {
+	background-color: #2e3142; /* Bleu */
+    color: #fff; /* Texte en blanc */
+    padding: 10px;
+    text-align: center;
+    position: absolute;
+    border-radius: 5px;
+
+    bottom: 0;
+    width: 100%;
+}
+#footer p {
+    margin: 0;
+}

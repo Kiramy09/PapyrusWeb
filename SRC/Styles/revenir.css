@@ -1,0 +1,66 @@
+
+@font-face {
+    font-family: 'Lora';
+    src: url('Polices/Lora/Lora-VariableFont_wght.ttf') format('truetype');
+  }
+  @font-face {
+    font-family: 'Roboto';
+    src: url('Polices/Roboto/Roboto-Light.ttf') format('truetype');
+  }
+
+  body {
+    font-family: 'Lora', serif;
+    background-color: #bfc0c0;
+    padding: 20px;
+    margin: 0;
+  }
+
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+
+  .container {
+    width: 100vw; 
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2e3142;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .content {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  input[type="file"] {
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  input[type="submit"] {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #555;
+  }

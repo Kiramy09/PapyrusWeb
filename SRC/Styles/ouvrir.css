@@ -12,12 +12,14 @@
     grid-gap: 250px; /* Espacement entre les éléments */
     overflow: auto; /* Barre de défilement en cas de dépassement */
     grid-auto-flow: dense; /* Ajout de cette ligne pour permettre un placement optimal des éléments */
+    overflow-x: hidden; /* Masque la barre de défilement horizontale */
     background-color:#bfc0c0;
     box-sizing: border-box;
     justify-content: left;
     align-items: center;
     align-content: start;
-    padding: 90px;
+    padding-top: 90px;
+    justify-items: start; 
     
 }
 
@@ -81,6 +83,8 @@ button{
   position: absolute;
   z-index: 2;
   transform: translate(0, 0);
+  width: 180px; /* Définir la largeur de l'image */
+  height: 180px; /* Définir la hauteur de l'image */
 }
 
 #block2 {
@@ -102,6 +106,8 @@ button{
 .image-copy {
   user-select: none; /* Empêche la sélection de la copie */
   pointer-events: none; /* Désactive les événements de pointeur (comme le glisser-déposer) */
+  width: 180px;
+  height: 180px;
 }
 
 @media (max-width: 768px) {

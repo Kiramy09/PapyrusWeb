@@ -27,6 +27,11 @@ const ouvrirPath = path.join(__dirname, '../Pages', 'ouvrir.html');
 const ouvrirCSSPath = path.join(__dirname, '../Styles', 'ouvrir.css');
 const ouvrirJSPath = path.join(__dirname, '../Scripts', 'ouvrir.js');
 
+const camanPath = path.join(__dirname, '../libs', 'caman.full.min.js');
+const d3Path = path.join(__dirname, '../libs', 'd3.v6.min.js');
+const html2canvasPath = path.join(__dirname, '../libs', 'html2canvas.min.js');
+const fileSaverPath = path.join(__dirname, '../libs', 'FileSaver.min.js');
+
 // Commande pour ouvrir le fichier index.html
 const openCommand = process.platform === 'win32' ? 'start' : 'open';
 
@@ -207,6 +212,50 @@ const server = http.createServer((req, res) => {
 
         res.statusCode = 200;
         res.setHeader('Content-Type', contentType);
+        res.end(data);
+      }
+    });
+  }else if (req.url === '/libs/caman.full.min.js') {
+    fs.readFile(camanPath, (err, data) => {
+      if (err) {
+        res.statusCode = 500;
+        res.end('Error loading caman.full.min.js');
+      } else {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/javascript');
+        res.end(data);
+      }
+    });
+  } else if (req.url === '/libs/d3.v6.min.js') {
+    fs.readFile(d3Path, (err, data) => {
+      if (err) {
+        res.statusCode = 500;
+        res.end('Error loading d3.v6.min.js');
+      } else {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/javascript');
+        res.end(data);
+      }
+    });
+  } else if (req.url === '/libs/html2canvas.min.js') {
+    fs.readFile(html2canvasPath, (err, data) => {
+      if (err) {
+        res.statusCode = 500;
+        res.end('Error loading html2canvas.min.js');
+      } else {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/javascript');
+        res.end(data);
+      }
+    });
+  } else if (req.url === '/libs/FileSaver.min.js') {
+    fs.readFile(fileSaverPath, (err, data) => {
+      if (err) {
+        res.statusCode = 500;
+        res.end('Error loading FileSaver.min.js');
+      } else {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/javascript');
         res.end(data);
       }
     });

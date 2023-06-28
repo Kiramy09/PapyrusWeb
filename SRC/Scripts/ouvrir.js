@@ -225,7 +225,6 @@
 
             document.getElementById('images').appendChild(div); // Ajouter le div contenant l'image à la page
             dragImages();
-            JPG
             var imageRect = transparentImage.getBoundingClientRect();
             var leftI = imageRect.left + 'px';
             var topI = imageRect.top + 'px';
@@ -293,145 +292,148 @@
     });
   }
 
-
-  let imagePositions = {};
-  let imageMatrix = [];
-
-
-
-  const selectedJSON = localStorage.getItem('selectedJSON'); // Récupérer le JSON depuis le stockage local
-
-  if (selectedJSON) {
-    const data = JSON.parse(selectedJSON); // Convertir le JSON en objet JavaScript
-    const selectedDirectory = data.selectedDirectory; 
-
-
-        //console.log('Contenu du fichier :', contenuFichier);
-        console.log('Nom du dossier :', selectedDirectory);
-
-        const nombreObjets = Object.keys(data).length - 1; // Soustraire 1 pour exclure la clé "selectedDirectory"
-        console.log('Nombre d\'objets dans le JSON :', nombreObjets);
-
-        if (!data || nombreObjets === 0) {
-          console.log("Aucune image trouvée dans le fichier.");
-        }
-
-        const imagePositions = data;
-        const cles = Object.keys(data).filter(key => key !== 'selectedDirectory');
-        console.log('Clés (noms des images) :', cles);
-
-        console.log(imagePositions)
-
-
-        
-        // Parcourir les clés (noms des images) et ajouter chaque image à la page
-        for (let i = 0; i < cles.length; i++) {
-          const filename = cles[i];
-
-          console.log('Nom de l\'image:', filename); // Afficher le nom de l'image dans la console
-
-          // Vérifier si l'image existe dans le JSON
-          if (imagePositions.hasOwnProperty(filename)) {
-            const img = new Image();
-            img.setAttribute('data-name', filename);
-            console.log(img)
-            img.onload = function() {
-              // Une fois l'image chargée, appeler removeBackground()
-              removeBackground(img, function(transparentImage) {
-                // Créer une div pour l'image
-                const imageDiv = document.createElement('div');
-                imageDiv.classList.add('image-container');
-
-              
-                imageDiv.appendChild(transparentImage);
-
-                // Vérifier si l'image est dans block2
-                const isInBlock2 = imagePositions[filename].isInBlock2;
-
-                // Vérifier si l'image est dans block2 pour afficher ou cacher le nom de l'image
-                if (!isInBlock2) {
-                // Créer un élément de texte pour le nom de l'image
-                const imageNameSpan = document.createElement('span');
-                imageNameSpan.innerText = filename; // Ajouter le nom de l'image dans le texte
-
-                // Ajouter le nom de l'image à la div
-                imageDiv.appendChild(imageNameSpan);
-
-                }
-
-                // Initialiser la fonction de glisser-déposer une fois que l'image a été ajoutée à la page
-                dragImages();
-
-                // Récupérer les positions de l'image à partir du JSON
-                const imagePositionsData = imagePositions[filename];
-                const leftI = imagePositionsData.left;
-                const topI = imagePositionsData.top;
-                const pos=imagePositionsData.isInBlock2;
-
-                // Mettre à jour les positions de l'image dans la div
-                imageDiv.style.left = leftI;
-                imageDiv.style.top = topI;
-
-                console.log(document.getElementById('block2'))
-
-                // Ajouter la div à la page
-                if(pos){
-                  //document.body.appendChild(imageDiv);
-                  console.log("image dans blok2")
-                  document.getElementById('block2').appendChild(imageDiv);
-
-                }
-                
-                else{
-                  console.log("image dans images")
-                  document.getElementById('images').appendChild(imageDiv);
-
-                }
-                //document.body.appendChild(imageDiv);
-              });
-            };
-            img.src = `../../IMAGES/${selectedDirectory}/${filename}`;// Chemin de l'image
-            img.classList.add('image');
+  document.addEventListener("DOMContentLoaded", function() {
+    imagePositions = {};
+    let imageMatrix = [];
+  
+  
+  
+    const selectedJSON = localStorage.getItem('selectedJSON'); // Récupérer le JSON depuis le stockage local
+  
+    if (selectedJSON) {
+      const data = JSON.parse(selectedJSON); // Convertir le JSON en objet JavaScript
+      const selectedDirectory = data.selectedDirectory; 
+  
+  
+          //console.log('Contenu du fichier :', contenuFichier);
+          console.log('Nom du dossier :', selectedDirectory);
+  
+          const nombreObjets = Object.keys(data).length - 1; // Soustraire 1 pour exclure la clé "selectedDirectory"
+          console.log('Nombre d\'objets dans le JSON :', nombreObjets);
+  
+          if (!data || nombreObjets === 0) {
+            console.log("Aucune image trouvée dans le fichier.");
           }
-        }
-      };
-
-          //Récupération des bouttons
-
-      const buttonSave = document.getElementById('save');
-      const captureButton=document.getElementById('capture');
-      const addImageButton = document.getElementById('add-image');
-      const saveAsButton = document.getElementById("saveAs");
-
-
-      //Appel des fonctions sur les boutons
-      //Enregistrer
-      buttonSave.addEventListener('click', () => {
-
-        enregistrer();
-
-      });
-      //capturer
-      captureButton.addEventListener('click', () => {
-
-              console.log("capture effectué")
-              captureImage();
-
-      });
-
-      //ajouter une image
-      addImageButton.addEventListener('click', function() {
-
-        addNewImage();
-
-      });
-      //Enregistrement d'un nouveau fichier
-
-      saveAsButton.addEventListener("click",function(){
-        console.log(imagePositions)
-        savePositions();
-        console.log(imagePositions)
-        saveImagePositions();
-
-
-      });
+  
+          const imagePositions = data;
+          const cles = Object.keys(data).filter(key => key !== 'selectedDirectory');
+          console.log('Clés (noms des images) :', cles);
+  
+          console.log(imagePositions)
+  
+  
+          
+          // Parcourir les clés (noms des images) et ajouter chaque image à la page
+          for (let i = 0; i < cles.length; i++) {
+            const filename = cles[i];
+  
+            console.log('Nom de l\'image:', filename); // Afficher le nom de l'image dans la console
+  
+            // Vérifier si l'image existe dans le JSON
+            if (imagePositions.hasOwnProperty(filename)) {
+              const img = new Image();
+              img.setAttribute('data-name', filename);
+              console.log(img)
+              img.onload = function() {
+                // Une fois l'image chargée, appeler removeBackground()
+                removeBackground(img, function(transparentImage) {
+                  // Créer une div pour l'image
+                  const imageDiv = document.createElement('div');
+                  imageDiv.classList.add('image-container');
+  
+                
+                  imageDiv.appendChild(transparentImage);
+  
+                  // Vérifier si l'image est dans block2
+                  const isInBlock2 = imagePositions[filename].isInBlock2;
+  
+                  // Vérifier si l'image est dans block2 pour afficher ou cacher le nom de l'image
+                  if (!isInBlock2) {
+                  // Créer un élément de texte pour le nom de l'image
+                  const imageNameSpan = document.createElement('span');
+                  imageNameSpan.innerText = filename; // Ajouter le nom de l'image dans le texte
+  
+                  // Ajouter le nom de l'image à la div
+                  imageDiv.appendChild(imageNameSpan);
+  
+                  }
+  
+                  // Initialiser la fonction de glisser-déposer une fois que l'image a été ajoutée à la page
+                  dragImages();
+  
+                  // Récupérer les positions de l'image à partir du JSON
+                  const imagePositionsData = imagePositions[filename];
+                  const leftI = imagePositionsData.left;
+                  const topI = imagePositionsData.top;
+                  const pos=imagePositionsData.isInBlock2;
+  
+                  // Mettre à jour les positions de l'image dans la div
+                  imageDiv.style.left = leftI;
+                  imageDiv.style.top = topI;
+  
+                  console.log(document.getElementById('block2'))
+  
+                  // Ajouter la div à la page
+                  if(pos){
+                    //document.body.appendChild(imageDiv);
+                    console.log("image dans blok2")
+                    document.getElementById('block2').appendChild(imageDiv);
+  
+                  }
+                  
+                  else{
+                    console.log("image dans images")
+                    document.getElementById('images').appendChild(imageDiv);
+  
+                  }
+                  //document.body.appendChild(imageDiv);
+                });
+              };
+              img.src = `../../IMAGES/${selectedDirectory}/${filename}`;// Chemin de l'image
+              img.classList.add('image');
+            }
+          }
+        };
+  
+        //Récupération des bouttons
+  
+        const buttonSave = document.getElementById('save');
+        const captureButton=document.getElementById('capture');
+        const addImageButton = document.getElementById('add-image');
+        const saveAsButton = document.getElementById("saveAs");
+  
+  
+        //Appel des fonctions sur les boutons
+        //Enregistrer
+        buttonSave.addEventListener('click', () => {
+  
+          enregistrer();
+          console.log("save");
+  
+        });
+        //capturer
+        captureButton.addEventListener('click', () => {
+  
+                console.log("capture effectué")
+                captureImage();
+  
+        });
+  
+        //ajouter une image
+        addImageButton.addEventListener('click', function() {
+  
+          addNewImage();
+  
+        });
+        //Enregistrement d'un nouveau fichier
+  
+        saveAsButton.addEventListener("click",function(){
+          console.log(imagePositions)
+          savePositions();
+          console.log(imagePositions)
+          saveImagePositions();
+  
+  
+        });
+  
+  });

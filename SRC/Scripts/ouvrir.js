@@ -72,7 +72,7 @@
     var imagesDeplacees = {};
     d3.select(document).on("mousemove", function(event) {
       if (selectedImage) {
-        if(!imagesDeplacees[selectedImage.src]) {
+        if (!document.getElementById('block2').contains(selectedImage) && !imagesDeplacees[selectedImage.src]) {
         var element = selectedImage.parentElement;
 
 
@@ -345,6 +345,11 @@
               
                 imageDiv.appendChild(transparentImage);
 
+                // Vérifier si l'image est dans block2
+                const isInBlock2 = imagePositions[filename].isInBlock2;
+
+                // Vérifier si l'image est dans block2 pour afficher ou cacher le nom de l'image
+                if (!isInBlock2) {
                 // Créer un élément de texte pour le nom de l'image
                 const imageNameSpan = document.createElement('span');
                 imageNameSpan.innerText = filename; // Ajouter le nom de l'image dans le texte
@@ -352,7 +357,7 @@
                 // Ajouter le nom de l'image à la div
                 imageDiv.appendChild(imageNameSpan);
 
-
+                }
 
                 // Initialiser la fonction de glisser-déposer une fois que l'image a été ajoutée à la page
                 dragImages();

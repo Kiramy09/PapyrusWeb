@@ -32,6 +32,10 @@ const d3Path = path.join(__dirname, '../libs', 'd3.v6.min.js');
 const html2canvasPath = path.join(__dirname, '../libs', 'html2canvas.min.js');
 const fileSaverPath = path.join(__dirname, '../libs', 'FileSaver.min.js');
 
+const robotoLightPath = path.join(__dirname, '../Polices/Roboto', 'Roboto-Light.ttf');
+const loraVariableFontPath = path.join(__dirname, '../Polices/Lora', 'Lora-VariableFont_wght.ttf');
+
+
 // Commande pour ouvrir le fichier index.html
 const openCommand = process.platform === 'win32' ? 'start' : 'open';
 
@@ -256,6 +260,28 @@ const server = http.createServer((req, res) => {
       } else {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/javascript');
+        res.end(data);
+      }
+    });
+  }else if (req.url === '/Polices/Roboto/Roboto-Light.ttf') {
+    fs.readFile(robotoLightPath, (err, data) => {
+      if (err) {
+        res.statusCode = 500;
+        res.end('Error loading Roboto-Light.ttf');
+      } else {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/octet-stream');
+        res.end(data);
+      }
+    });
+  } else if (req.url === '/Polices/Lora/Lora-VariableFont_wght.ttf') {
+    fs.readFile(loraVariableFontPath, (err, data) => {
+      if (err) {
+        res.statusCode = 500;
+        res.end('Error loading Lora-VariableFont_wght.ttf');
+      } else {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/octet-stream');
         res.end(data);
       }
     });

@@ -1,11 +1,11 @@
 
 @font-face {
     font-family: 'Lora';
-    src: url('Polices/Lora/Lora-VariableFont_wght.ttf') format('truetype');
+    src: url('../Polices/Lora/Lora-VariableFont_wght.ttf') format('truetype');
   }
   @font-face {
     font-family: 'Roboto';
-    src: url('Polices/Roboto/Roboto-Light.ttf') format('truetype');
+    src: url('../Polices/Roboto/Roboto-Light.ttf') format('truetype');
   }
 
   body {

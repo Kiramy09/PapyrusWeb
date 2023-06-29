@@ -294,10 +294,6 @@
 
   document.addEventListener("DOMContentLoaded", function() {
     imagePositions = {};
-    let imageMatrix = [];
-  
-  
-  
     const selectedJSON = localStorage.getItem('selectedJSON'); // Récupérer le JSON depuis le stockage local
   
     if (selectedJSON) {
@@ -340,55 +336,65 @@
                   // Créer une div pour l'image
                   const imageDiv = document.createElement('div');
                   imageDiv.classList.add('image-container');
-  
-                
+              
                   imageDiv.appendChild(transparentImage);
-  
+              
                   // Vérifier si l'image est dans block2
                   const isInBlock2 = imagePositions[filename].isInBlock2;
-  
+              
                   // Vérifier si l'image est dans block2 pour afficher ou cacher le nom de l'image
                   if (!isInBlock2) {
-                  // Créer un élément de texte pour le nom de l'image
-                  const imageNameSpan = document.createElement('span');
-                  imageNameSpan.innerText = filename; // Ajouter le nom de l'image dans le texte
-  
-                  // Ajouter le nom de l'image à la div
-                  imageDiv.appendChild(imageNameSpan);
-  
+                    // Créer un élément de texte pour le nom de l'image
+                    const imageNameSpan = document.createElement('span');
+                    imageNameSpan.innerText = filename; // Ajouter le nom de l'image dans le texte
+              
+                    // Ajouter le nom de l'image à la div
+                    imageDiv.appendChild(imageNameSpan);
+                  } else {
+                    // Créer une copie de l'image pour "Images" avec bordure rouge et classe "non-draggable-image"
+                    const imageCopy = new Image();
+                    imageCopy.classList.add('image-copy');
+                    const imageCopyDiv = document.createElement('div');
+                    imageCopyDiv.classList.add('image-container');
+                    imageCopy.src =transparentImage.src;
+                    imageCopy.classList.add('non-draggable-image');
+                    imageCopyDiv.appendChild(imageCopy);
+                    imageCopyDiv.style.border = "2px solid red";
+              
+                    // Ajouter la copie de l'image à la div "Images"
+                    document.getElementById("images").appendChild(imageCopyDiv);
+              
+                    // Ajouter l'image originale à la div "block2"
+                    const block2Div = document.getElementById("block2");
+                    block2Div.appendChild(imageDiv);
                   }
-  
+              
                   // Initialiser la fonction de glisser-déposer une fois que l'image a été ajoutée à la page
                   dragImages();
-  
+              
                   // Récupérer les positions de l'image à partir du JSON
                   const imagePositionsData = imagePositions[filename];
                   const leftI = imagePositionsData.left;
                   const topI = imagePositionsData.top;
-                  const pos=imagePositionsData.isInBlock2;
-  
+                  const pos = imagePositionsData.isInBlock2;
+              
                   // Mettre à jour les positions de l'image dans la div
                   imageDiv.style.left = leftI;
                   imageDiv.style.top = topI;
-  
+              
                   console.log(document.getElementById('block2'))
-  
+              
                   // Ajouter la div à la page
-                  if(pos){
-                    //document.body.appendChild(imageDiv);
-                    console.log("image dans blok2")
+                  if (pos) {
+                    console.log("image dans block2")
                     document.getElementById('block2').appendChild(imageDiv);
-  
-                  }
-                  
-                  else{
+                  } else {
                     console.log("image dans images")
                     document.getElementById('images').appendChild(imageDiv);
-  
                   }
-                  //document.body.appendChild(imageDiv);
                 });
               };
+              
               img.src = `../../IMAGES/${selectedDirectory}/${filename}`;// Chemin de l'image
               img.classList.add('image');
             }
